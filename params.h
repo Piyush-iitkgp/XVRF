@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <cstdint>
+#include <cstddef>
 
 // Security parameter (32 bytes = 256 bits)
 constexpr size_t LAMBDA = 32;
