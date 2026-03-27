@@ -1,0 +1,47 @@
+
+╔═══════════════════════════════════════╗
+║      X-MVRF Interactive Demo (C++)    ║
+╚═══════════════════════════════════════╝
+────────────────────────────────────────────────────────
+Select VRF Mode:
+1) X-VRF (single layer)
+2) X-MVRF (multi-layer)
+Choice [1-2]: 
+Mode: X-VRF
+────────────────────────────────────────────────────────
+1) KeyGen
+2) Eval
+3) Verify
+4) Change Mode
+5) Exit
+Choice [1-5]: ────────────────────────────────────────────────────────
+X-VRF Key Generation (single layer)
+Enter tree height [1-20]: Generating layer 1 with 32768 nodes...
+
+[KEYGEN SUCCESS]
+Public Key (Root): 2f6760c6002d01c321f1ca8ef8ae3b294291f2ed5d15c7589ac6471b1e07c17a
+Secret Key (Seed): 67c6697351ff4aec29cdbaabf2fbe3467cc254f81be8e78d765a2e63339fc99a
+Capacity: 2^15 (32768) evaluations
+Time: 16211419 μs
+────────────────────────────────────────────────────────
+1) KeyGen
+2) Eval
+3) Verify
+4) Change Mode
+5) Exit
+Choice [1-5]: ────────────────────────────────────────────────────────
+Enter message (hex or ASCII, max 32 bytes): 
+[EVAL SUCCESS]
+VRF Output (y): 613ce23bcef7dfd82ea3a99388c2818d041b52eaa3dd0bfb633b2c9e1a96beb1
+Index: 0
+Auth Path: 15 nodes
+Total Capacity: 2^15 (32768)
+Remaining: 32767 evaluations
+Time: 18765 μs
+────────────────────────────────────────────────────────
+1) KeyGen
+2) Eval
+3) Verify
+4) Change Mode
+5) Exit
+Choice [1-5]: Exiting...

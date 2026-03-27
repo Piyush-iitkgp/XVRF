@@ -45,6 +45,23 @@ static Bytes hex2bytes(const string& hex) {
 }
 
 // ============================================================================
+// format_capacity: Format capacity value, handling values > 2^63
+// ============================================================================
+// Purpose: Display capacity in "2^x (value)" format for all bit widths
+// For bits <= 63: compute and display "2^x (actual_value)"
+// For bits > 63: display as "2^x" only (cannot compute in 64-bit)
+static string format_capacity(uint32_t bits) {
+    if (bits > 63) {
+        // Cannot represent in 64-bit integer
+        return "2^" + to_string(bits);
+    }
+    if (bits == 63) {
+        return "2^63 (" + to_string(1ULL << 63) + ")";
+    }
+    return "2^" + to_string(bits) + " (" + to_string(1ULL << bits) + ")";
+}
+
+// ============================================================================
 // sep: Print visual separator line
 // ============================================================================
 // Purpose: Make CLI output more readable with separator lines
@@ -151,7 +168,7 @@ static void keygen() {
         cout << "Public Key (Root): " << HashUtils::to_hex(xvrf->get_pk()) << "\n";
         cout << "Secret Key (Seed): " << HashUtils::to_hex(seed) << "\n";
         cout << "Layers: " << num_layers << ", Height: " << layer_heights[0] << "\n";
-        cout << "Capacity: " << (1u << (layer_heights[0] * num_layers)) << " evaluations\n";
+        cout << "Capacity: " << format_capacity(layer_heights[0] * num_layers) << " evaluations\n";
         cout << "Time: " << dt.count() << " μs\n";
     } else {
         // X-VRF key generation (single layer)
@@ -179,7 +196,7 @@ static void keygen() {
         cout << "\n[KEYGEN SUCCESS]\n";
         cout << "Public Key (Root): " << HashUtils::to_hex(xvrf->get_pk()) << "\n";
         cout << "Secret Key (Seed): " << HashUtils::to_hex(seed) << "\n";
-        cout << "Capacity: " << (1u << h) << " evaluations\n";
+        cout << "Capacity: " << format_capacity(h) << " evaluations\n";
         cout << "Time: " << dt.count() << " μs\n";
     }
 }
@@ -244,7 +261,10 @@ static void eval() {
         // Single-layer mode: show simple info
         cout << "Index: " << proof.indices[0] << "\n";
         cout << "Auth Path: " << proof.auth_paths[0].size() << " nodes\n";
-        cout << "Remaining: " << ((1u << layer_heights[0]) - proof.indices[0] - 1) << " uses\n";
+        uint64_t total = (1ULL << layer_heights[0]);
+        uint64_t remaining = total - proof.indices[0] - 1;
+        cout << "Total Capacity: " << format_capacity(layer_heights[0]) << "\n";
+        cout << "Remaining: " << remaining << " evaluations\n";
     }
     cout << "Time: " << dt.count() << " μs\n";
 }
