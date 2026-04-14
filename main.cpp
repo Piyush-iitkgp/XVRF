@@ -250,17 +250,48 @@ static void eval() {
     cout << "\n[EVAL SUCCESS]\n";
     cout << "VRF Output (y): " << HashUtils::to_hex(y) << "\n";
     
+    // Display proof components
+    cout << "π (Proof): \n";
+    
     if (use_mvrf) {
-        // Multi-layer mode: show per-layer info
+        // Multi-layer mode: show detailed per-layer proof
         cout << "Layers: " << num_layers << "\n";
         for (uint32_t i = 0; i < num_layers; i++) {
-            cout << "Layer " << (i + 1) << ": index=" << proof.indices[i] 
-                 << ", auth_path=" << proof.auth_paths[i].size() << " nodes\n";
+            cout << "\n  Layer " << (i + 1) << ":\n";
+            cout << "    Index: " << proof.indices[i] << "\n";
+            
+            // Print WOTS+ signature
+            cout << "    σ (WOTS+ Sig): ";
+            for (const auto& sig_component : proof.wots_sigs[i]) {
+                cout << HashUtils::to_hex(sig_component) << " ";
+            }
+            cout << "\n";
+            
+            // Print authentication path
+            cout << "    Auth" << i << " (path): ";
+            for (const auto& node : proof.auth_paths[i]) {
+                cout << HashUtils::to_hex(node) << " ";
+            }
+            cout << "\n";
         }
     } else {
-        // Single-layer mode: show simple info
+        // Single-layer mode: show detailed proof
         cout << "Index: " << proof.indices[0] << "\n";
-        cout << "Auth Path: " << proof.auth_paths[0].size() << " nodes\n";
+        
+        // Print WOTS+ signature
+        cout << "σ (WOTS+ Sig): ";
+        for (const auto& sig_component : proof.wots_sigs[0]) {
+            cout << HashUtils::to_hex(sig_component) << " ";
+        }
+        cout << "\n";
+        
+        // Print authentication path
+        cout << "Auth Path: ";
+        for (const auto& node : proof.auth_paths[0]) {
+            cout << HashUtils::to_hex(node) << " ";
+        }
+        cout << "\n";
+        
         uint64_t total = (1ULL << layer_heights[0]);
         uint64_t remaining = total - proof.indices[0] - 1;
         cout << "Total Capacity: " << format_capacity(layer_heights[0]) << "\n";
